@@ -23,7 +23,7 @@ export const ReadingsList = ({ refreshTrigger }: { refreshTrigger: number }) => 
       .from('readings')
       .select(`
         *,
-        users!inner (
+        users (
           name,
           email
         )
