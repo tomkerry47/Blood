@@ -74,51 +74,31 @@ export const Dashboard = () => {
             <p>Get automatic reminders at noon and every 2 hours if you haven't recorded a reading.</p>
             
             <div className="download-shortcut-section">
-              <h4>Quick Setup</h4>
-              <p>Download the step-by-step instructions, then copy your API URL:</p>
+              <h4>One-Click Install</h4>
+              <p>Tap the button below on your iPhone to install the shortcut:</p>
               <div className="download-buttons">
                 <a 
-                  href="/BP-Tracker-Shortcut.txt" 
-                  download="BP-Tracker-Instructions.txt"
+                  href="/BP-Tracker.shortcut" 
                   className="btn-download"
                 >
-                  📥 Download Instructions
+                  📲 Install Shortcut
                 </a>
-                <button onClick={copyShortcutURL} className="btn-copy-url">
-                  📋 Copy Your API URL
-                </button>
               </div>
-              <p className="help-note">Your API URL: <code>{window.location.origin}/api/check-reading</code></p>
-              <p className="help-note">💡 This checks if <strong>either</strong> user has recorded a reading today (for the patient)</p>
+              <p className="help-note">✨ Opens directly in the Shortcuts app - just tap "Add Shortcut"</p>
+              <p className="help-note">💡 Works for both users - checks if <strong>either</strong> user has recorded a reading today</p>
             </div>
 
             <div className="instruction-steps">
               <div className="step">
                 <div className="step-number">1</div>
                 <div className="step-content">
-                  <h4>Download Instructions</h4>
-                  <p>Click "Download Instructions" above to get the detailed setup guide. Open it and follow along!</p>
+                  <h4>Install the Shortcut</h4>
+                  <p>Tap "Install Shortcut" above on your iPhone. It will open the Shortcuts app and prompt you to add it.</p>
                 </div>
               </div>
 
               <div className="step">
                 <div className="step-number">2</div>
-                <div className="step-content">
-                  <h4>Copy Your API URL</h4>
-                  <p>Click "Copy Your API URL" above. You'll paste this into the Shortcuts app.</p>
-                </div>
-              </div>
-
-              <div className="step">
-                <div className="step-number">3</div>
-                <div className="step-content">
-                  <h4>Follow Downloaded Instructions</h4>
-                  <p>The downloaded file has detailed step-by-step instructions for creating the shortcut. It shows you exactly which actions to add and in what order.</p>
-                </div>
-              </div>
-
-              <div className="step">
-                <div className="step-number">4</div>
                 <div className="step-content">
                   <h4>Set Up Automations</h4>
                   <ol>
@@ -139,7 +119,7 @@ export const Dashboard = () => {
               </div>
 
               <div className="step">
-                <div className="step-number">5</div>
+                <div className="step-number">3</div>
                 <div className="step-content">
                   <h4>Test It!</h4>
                   <p>Tap your shortcut manually to test. You should get a notification if you haven't recorded a reading today.</p>
@@ -148,7 +128,6 @@ export const Dashboard = () => {
             </div>
 
             <div className="instructions-footer">
-              <p className="footer-note">💡 <strong>Tip:</strong> The downloaded file has complete details for each step!</p>
               <button onClick={() => setShowShortcutInstructions(false)} className="btn-secondary">
                 Close Instructions
               </button>
