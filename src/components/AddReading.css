@@ -35,11 +35,24 @@
 .form-group textarea {
   width: 100%;
   padding: 10px;
+  padding-right: 50px; /* Make room for unit text */
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.2s;
   box-sizing: border-box;
+}
+
+.form-group input[type="number"] {
+  /* Remove default spinner arrows on webkit browsers */
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  margin-left: 10px;
 }
 
 .form-group input:focus,
