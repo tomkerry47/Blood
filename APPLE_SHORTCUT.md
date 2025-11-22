@@ -37,20 +37,26 @@ The shortcut will:
    - Or just paste the URL you copied from the app
    - **Method**: GET
 
-#### Action 2: If Statement
+#### Action 2: Get Dictionary Value
+1. Search for "Get Dictionary Value" and add it
+2. Configure:
+   - **Key**: `hasReadingToday`
+   - **Dictionary**: Contents of URL (from previous action)
+
+#### Action 3: If Statement
 1. Search for "If" and add it
 2. Configure:
-   - **If**: Contents of URL (from previous action)
-   - **is**: "false"
+   - **If**: Dictionary Value (from previous action)
+   - **is**: false (boolean, not text)
 
-#### Action 3: Show Notification (inside the If block)
+#### Action 4: Show Notification (inside the If block)
 1. Search for "Show Notification" and add it
 2. Configure:
    - **Title**: "Blood Pressure Reminder"
    - **Body**: "Don't forget to record your blood pressure reading today! 🩺"
    - **Sound**: Choose a sound
 
-#### Action 4: Otherwise (optional - for debugging)
+#### Action 5: Otherwise (optional - for debugging)
 1. The "Otherwise" block is automatically created
 2. You can add a notification here too:
    - **Title**: "BP Reading Complete"
@@ -125,19 +131,23 @@ If automations aren't working, you can:
 
 ## Example API Response
 
-When you open the URL manually in Safari, you should see just:
+When you open the URL manually in Safari, you should see:
 
-```
-true
+```json
+{
+  "hasReadingToday": true
+}
 ```
 
 or
 
-```
-false
+```json
+{
+  "hasReadingToday": false
+}
 ```
 
-Simple! `true` means a reading was recorded today, `false` means no reading yet.
+The API returns proper JSON with `Content-Type: application/json` header, so Shortcuts will automatically treat it as a Dictionary (not a file).
 
 ## Privacy Note
 

@@ -5,6 +5,7 @@ export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
@@ -36,7 +37,7 @@ export default async function handler(req: any, res: any) {
       .limit(1);
 
     if (allError) {
-      res.status(500).send('false');
+      res.status(500).json({ hasReadingToday: false });
       return;
     }
 
@@ -54,9 +55,9 @@ export default async function handler(req: any, res: any) {
       hasReadingToday = todayStart.getTime() === readingDayStart.getTime();
     }
 
-    // Return plain text "true" or "false"
-    res.status(200).send(hasReadingToday ? 'true' : 'false');
+    // Return proper JSON with boolean (no quotes around true/false)
+    res.status(200).json({ hasReadingToday });
   } catch (error: any) {
-    res.status(500).send('false');
+    res.status(500).json({ hasReadingToday: false });
   }
 }
