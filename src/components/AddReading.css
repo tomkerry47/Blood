@@ -35,12 +35,15 @@
 .form-group textarea {
   width: 100%;
   padding: 10px;
-  padding-right: 50px; /* Make room for unit text */
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.2s;
   box-sizing: border-box;
+}
+
+.form-group input[type="number"] {
+  padding-right: 80px; /* Make room for unit text and arrows */
 }
 
 .form-group input[type="number"] {
@@ -68,11 +71,13 @@
 
 .unit {
   position: absolute;
-  right: 12px;
+  right: 40px;
   top: 38px;
   color: #a0aec0;
   font-size: 14px;
   pointer-events: none;
+  background: white;
+  padding-left: 4px;
 }
 
 .success-message {
