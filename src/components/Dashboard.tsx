@@ -9,6 +9,7 @@ export const Dashboard = () => {
   const { user, signOut } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showUserId, setShowUserId] = useState(false);
+  const [showShortcutInstructions, setShowShortcutInstructions] = useState(false);
 
   const handleReadingAdded = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -19,6 +20,12 @@ export const Dashboard = () => {
       navigator.clipboard.writeText(user.id);
       alert('User ID copied to clipboard!');
     }
+  };
+
+  const copyShortcutURL = () => {
+    const apiUrl = window.location.origin + `/api/check-reading?userId=${user?.id}`;
+    navigator.clipboard.writeText(apiUrl);
+    alert('API URL copied! Use this in your Apple Shortcut.');
   };
 
   return (
@@ -47,10 +54,94 @@ export const Dashboard = () => {
       )}
 
       <div className="shortcut-helper">
-        <button onClick={() => setShowUserId(!showUserId)} className="btn-link">
-          {showUserId ? 'Hide' : 'Show'} User ID for Apple Shortcut
+        <button 
+          onClick={() => setShowShortcutInstructions(!showShortcutInstructions)} 
+          className="btn-link"
+        >
+          {showShortcutInstructions ? '📱 Hide' : '📱 Set Up'} Apple Shortcut Notifications
         </button>
+        {!showShortcutInstructions && (
+          <button onClick={() => setShowUserId(!showUserId)} className="btn-link" style={{ marginLeft: '16px' }}>
+            {showUserId ? 'Hide' : 'Show'} User ID
+          </button>
+        )}
       </div>
+
+      {showShortcutInstructions && (
+        <div className="shortcut-instructions">
+          <div className="instructions-content">
+            <h3>📱 Set Up Apple Shortcut Notifications</h3>
+            <p>Get automatic reminders at noon and every 2 hours if you haven't recorded a reading.</p>
+            
+            <div className="instruction-steps">
+              <div className="step">
+                <div className="step-number">1</div>
+                <div className="step-content">
+                  <h4>Copy Your API URL</h4>
+                  <div className="api-url-box">
+                    <code>{window.location.origin}/api/check-reading?userId={user?.id}</code>
+                    <button onClick={copyShortcutURL} className="btn-copy-small">Copy</button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="step">
+                <div className="step-number">2</div>
+                <div className="step-content">
+                  <h4>Create the Shortcut</h4>
+                  <ol>
+                    <li>Open the <strong>Shortcuts</strong> app on your iPhone</li>
+                    <li>Tap <strong>+</strong> to create a new shortcut</li>
+                    <li>Name it "Check BP Reading"</li>
+                    <li>Add these actions:</li>
+                  </ol>
+                  <ul className="action-list">
+                    <li><strong>Get Contents of URL</strong> - Paste your API URL above</li>
+                    <li><strong>Get Dictionary Value</strong> - Key: <code>hasReadingToday</code></li>
+                    <li><strong>If</strong> - Condition: Dictionary Value is false</li>
+                    <li><strong>Show Notification</strong> - "Don't forget your BP reading! 🩺"</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="step">
+                <div className="step-number">3</div>
+                <div className="step-content">
+                  <h4>Set Up Automations</h4>
+                  <ol>
+                    <li>Go to the <strong>Automation</strong> tab in Shortcuts</li>
+                    <li>Create <strong>Time of Day</strong> automations for:
+                      <ul>
+                        <li>12:00 PM (noon)</li>
+                        <li>2:00 PM</li>
+                        <li>4:00 PM</li>
+                        <li>6:00 PM</li>
+                        <li>8:00 PM</li>
+                      </ul>
+                    </li>
+                    <li>Each automation should run "Check BP Reading"</li>
+                    <li>Toggle <strong>OFF</strong> "Ask Before Running"</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div className="step">
+                <div className="step-number">4</div>
+                <div className="step-content">
+                  <h4>Test It!</h4>
+                  <p>Tap your shortcut manually to test. You should get a notification if you haven't recorded a reading today.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="instructions-footer">
+              <button onClick={() => setShowShortcutInstructions(false)} className="btn-secondary">
+                Close Instructions
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="dashboard-main">
         <div className="dashboard-container">
