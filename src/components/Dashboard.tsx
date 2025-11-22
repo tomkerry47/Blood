@@ -22,12 +22,6 @@ export const Dashboard = () => {
     }
   };
 
-  const copyShortcutURL = () => {
-    const apiUrl = window.location.origin + `/api/check-reading`;
-    navigator.clipboard.writeText(apiUrl);
-    alert('API URL copied! Use this in your Apple Shortcut.');
-  };
-
   return (
     <div className="dashboard">
       <header className="dashboard-header">
