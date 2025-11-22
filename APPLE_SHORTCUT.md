@@ -37,26 +37,20 @@ The shortcut will:
    - Or just paste the URL you copied from the app
    - **Method**: GET
 
-#### Action 2: Get Dictionary Value
-1. Search for "Get Dictionary Value" and add it
-2. Configure:
-   - **Key**: `hasReadingToday`
-   - **Dictionary**: Contents of URL (from previous action)
-
-#### Action 3: If Statement
+#### Action 2: If Statement
 1. Search for "If" and add it
 2. Configure:
-   - **If**: Dictionary Value
-   - **is**: false
+   - **If**: Contents of URL (from previous action)
+   - **is**: "false"
 
-#### Action 4: Show Notification (inside the If block)
+#### Action 3: Show Notification (inside the If block)
 1. Search for "Show Notification" and add it
 2. Configure:
    - **Title**: "Blood Pressure Reminder"
    - **Body**: "Don't forget to record your blood pressure reading today! 🩺"
    - **Sound**: Choose a sound
 
-#### Action 5: Otherwise (optional - for debugging)
+#### Action 4: Otherwise (optional - for debugging)
 1. The "Otherwise" block is automatically created
 2. You can add a notification here too:
    - **Title**: "BP Reading Complete"
@@ -131,16 +125,19 @@ If automations aren't working, you can:
 
 ## Example API Response
 
-When you open the URL manually in Safari, you should see:
+When you open the URL manually in Safari, you should see just:
 
-```json
-{
-  "userId": "your-user-id",
-  "hasReadingToday": false,
-  "lastReading": null,
-  "checked_at": "2024-11-22T15:30:00.000Z"
-}
 ```
+true
+```
+
+or
+
+```
+false
+```
+
+Simple! `true` means a reading was recorded today, `false` means no reading yet.
 
 ## Privacy Note
 

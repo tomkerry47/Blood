@@ -31,52 +31,32 @@ export default async function handler(req: any, res: any) {
     // Get the most recent reading to check if it's from today
     const { data: allData, error: allError } = await supabase
       .from('readings')
-      .select('id, recorded_at, user_id, users(name)')
+      .select('recorded_at')
       .order('recorded_at', { ascending: false })
-      .limit(5);  // Get last 5 readings for debugging
+      .limit(1);
 
     if (allError) {
-      res.status(500).json({ error: allError.message });
+      res.status(500).send('false');
       return;
     }
 
-    // Check if the most recent reading is from today (any timezone)
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-    
+    // Check if the most recent reading is from today
     let hasReadingToday = false;
-    let lastReading = null;
 
     if (allData && allData.length > 0) {
-      const mostRecent = allData[0];
-      const readingDate = new Date(mostRecent.recorded_at);
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+      
+      const readingDate = new Date(allData[0].recorded_at);
       const readingDayStart = new Date(readingDate.getFullYear(), readingDate.getMonth(), readingDate.getDate(), 0, 0, 0, 0);
       
       // Check if same calendar day
       hasReadingToday = todayStart.getTime() === readingDayStart.getTime();
-      
-      if (hasReadingToday) {
-        lastReading = {
-          recorded_at: mostRecent.recorded_at,
-          user_name: (mostRecent as any).users?.name || 'Unknown'
-        };
-      }
     }
 
-    res.status(200).json({
-      hasReadingToday,
-      lastReading,
-      checked_at: new Date().toISOString(),
-      debug: {
-        serverTime: now.toISOString(),
-        todayStart: todayStart.toISOString(),
-        recentReadings: allData?.map(r => ({
-          recorded_at: r.recorded_at,
-          isSameDay: hasReadingToday
-        })) || []
-      }
-    });
+    // Return plain text "true" or "false"
+    res.status(200).send(hasReadingToday ? 'true' : 'false');
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).send('false');
   }
 }

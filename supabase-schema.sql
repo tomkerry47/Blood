@@ -53,6 +53,12 @@ CREATE POLICY "Users can view all readings"
   TO authenticated
   USING (true);
 
+-- Allow anonymous read access for the API check-reading endpoint
+CREATE POLICY "Anonymous can view readings for notifications"
+  ON readings FOR SELECT
+  TO anon
+  USING (true);
+
 -- Users can insert their own readings
 CREATE POLICY "Users can insert own readings"
   ON readings FOR INSERT
