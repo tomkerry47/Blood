@@ -23,7 +23,7 @@ export const Dashboard = () => {
   };
 
   const copyShortcutURL = () => {
-    const apiUrl = window.location.origin + `/api/check-reading?userId=${user?.id}`;
+    const apiUrl = window.location.origin + `/api/check-reading`;
     navigator.clipboard.writeText(apiUrl);
     alert('API URL copied! Use this in your Apple Shortcut.');
   };
@@ -88,7 +88,8 @@ export const Dashboard = () => {
                   📋 Copy Your API URL
                 </button>
               </div>
-              <p className="help-note">Your API URL: <code>{window.location.origin}/api/check-reading?userId={user?.id}</code></p>
+              <p className="help-note">Your API URL: <code>{window.location.origin}/api/check-reading</code></p>
+              <p className="help-note">💡 This checks if <strong>either</strong> user has recorded a reading today (for the patient)</p>
             </div>
 
             <div className="instruction-steps">

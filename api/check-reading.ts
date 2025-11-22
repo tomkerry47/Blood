@@ -16,13 +16,6 @@ export default async function handler(req: any, res: any) {
     return;
   }
 
-  const { userId } = req.query;
-
-  if (!userId) {
-    res.status(400).json({ error: 'userId is required' });
-    return;
-  }
-
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
@@ -34,14 +27,13 @@ export default async function handler(req: any, res: any) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    // Check if there's a reading for today
+    // Check if there's ANY reading for today (from any user)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     const { data, error } = await supabase
       .from('readings')
-      .select('id, recorded_at')
-      .eq('user_id', userId)
+      .select('id, recorded_at, user_id, users(name)')
       .gte('recorded_at', today.toISOString())
       .order('recorded_at', { ascending: false })
       .limit(1);
@@ -54,9 +46,11 @@ export default async function handler(req: any, res: any) {
     const hasReadingToday = data && data.length > 0;
 
     res.status(200).json({
-      userId,
       hasReadingToday,
-      lastReading: hasReadingToday ? data[0].recorded_at : null,
+      lastReading: hasReadingToday ? {
+        recorded_at: data[0].recorded_at,
+        user_name: (data[0] as any).users?.name || 'Unknown'
+      } : null,
       checked_at: new Date().toISOString(),
     });
   } catch (error: any) {

@@ -9,16 +9,15 @@ The shortcut will:
 2. Send a notification if no reading exists
 3. Run every 2 hours automatically using iOS Automation
 
-## Step 1: Get Your User ID
+## Step 1: Get Your API URL
 
-1. Open the Blood Pressure Tracker app in Safari on your iPhone
-2. Sign in to your account
-3. Open Safari's Developer Tools (if on Mac) or use the API endpoint:
-   - Go to: `https://your-app.vercel.app` (your deployed URL)
-   - Sign in
-4. To find your user ID:
-   - **Option A**: Check the database directly in Supabase Dashboard → Table Editor → users table
-   - **Option B**: Add this temporary code to see your user ID in the app (ask developer)
+1. Open the Blood Pressure Tracker app
+2. Sign in with your account
+3. Click **"📱 Set Up Apple Shortcut Notifications"**
+4. Click **"Copy Your API URL"**
+5. The URL is copied to your clipboard!
+
+**Note:** Both users/caregivers can use the SAME API URL and shortcut! The system checks if ANY reading has been recorded today for the patient, so once one person records it, both stop getting notifications.
 
 ## Step 2: Create the Shortcut
 
@@ -33,9 +32,9 @@ The shortcut will:
 #### Action 1: Get URL Contents
 1. Search for "Get Contents of URL" and add it
 2. Configure:
-   - **URL**: `https://your-app.vercel.app/api/check-reading?userId=YOUR_USER_ID`
+   - **URL**: `https://your-app.vercel.app/api/check-reading`
    - Replace `your-app.vercel.app` with your actual deployment URL
-   - Replace `YOUR_USER_ID` with your actual user ID from Supabase
+   - Or just paste the URL you copied from the app
    - **Method**: GET
 
 #### Action 2: Get Dictionary Value

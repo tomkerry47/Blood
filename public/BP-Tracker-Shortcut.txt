@@ -49,6 +49,8 @@ Follow these steps to set up your BP tracking notifications:
 5. Tap on the URL field in the "Get Contents of URL" action
 6. Paste your API URL
 
+**Note:** Both users can use the SAME API URL! It checks if ANY reading has been recorded today for the patient.
+
 ### Step 4: Test the Shortcut
 
 1. Tap the ▶️ play button in Shortcuts
@@ -99,6 +101,6 @@ Repeat steps 2-10 for these additional times:
 If you have issues, check the in-app instructions or refer to APPLE_SHORTCUT.md in the GitHub repository.
 
 Your API URL format should look like:
-`https://your-app.vercel.app/api/check-reading?userId=your-user-id`
+`https://your-app.vercel.app/api/check-reading`
 
-Each person needs their own shortcut with their own unique API URL!
+**Important:** Both users can share the SAME shortcut and API URL! The API checks if ANY reading has been recorded today (by either caregiver) for the patient. This way, once one person records a reading, both people stop getting notifications for that day.
