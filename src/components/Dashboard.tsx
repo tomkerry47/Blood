@@ -8,18 +8,10 @@ import './Dashboard.css';
 export const Dashboard = () => {
   const { user, signOut } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [showUserId, setShowUserId] = useState(false);
   const [showShortcutInstructions, setShowShortcutInstructions] = useState(false);
 
   const handleReadingAdded = () => {
     setRefreshTrigger(prev => prev + 1);
-  };
-
-  const copyUserId = () => {
-    if (user?.id) {
-      navigator.clipboard.writeText(user.id);
-      alert('User ID copied to clipboard!');
-    }
   };
 
   return (
@@ -36,17 +28,6 @@ export const Dashboard = () => {
         </div>
       </header>
 
-      {showUserId && user?.id && (
-        <div className="user-id-banner">
-          <div className="user-id-content">
-            <strong>Your User ID (for Apple Shortcut):</strong>
-            <code>{user.id}</code>
-            <button onClick={copyUserId} className="btn-copy">Copy</button>
-            <button onClick={() => setShowUserId(false)} className="btn-close">✕</button>
-          </div>
-        </div>
-      )}
-
       <div className="shortcut-helper">
         <button 
           onClick={() => setShowShortcutInstructions(!showShortcutInstructions)} 
@@ -54,11 +35,6 @@ export const Dashboard = () => {
         >
           {showShortcutInstructions ? '📱 Hide' : '📱 Set Up'} Apple Shortcut Notifications
         </button>
-        {!showShortcutInstructions && (
-          <button onClick={() => setShowUserId(!showUserId)} className="btn-link" style={{ marginLeft: '16px' }}>
-            {showUserId ? 'Hide' : 'Show'} User ID
-          </button>
-        )}
       </div>
 
       {showShortcutInstructions && (
