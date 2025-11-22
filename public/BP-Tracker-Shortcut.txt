@@ -1,0 +1,104 @@
+# Blood Pressure Tracker - Apple Shortcut Setup
+
+## Quick Import Instructions
+
+Follow these steps to set up your BP tracking notifications:
+
+### Step 1: Create the Shortcut
+
+1. Open the **Shortcuts** app on your iPhone
+2. Tap the **+** button (top right) to create a new shortcut
+3. Tap the shortcut name at the top and rename it to: **Check BP Reading**
+
+### Step 2: Add Actions (in this exact order)
+
+**Action 1: Get Contents of URL**
+- Search for "Get Contents of URL"
+- Tap it to add
+- In the URL field, you'll paste YOUR API URL (copied from the app)
+- Method: GET
+
+**Action 2: Get Dictionary Value**
+- Search for "Get Dictionary Value"
+- Tap it to add
+- Set the Key to: `hasReadingToday`
+- It should automatically use "Contents of URL" as the dictionary
+
+**Action 3: If**
+- Search for "If"
+- Tap it to add
+- Set condition to: Dictionary Value **is** **false**
+
+**Action 4: Show Notification** (inside the If block)
+- Search for "Show Notification"
+- Drag it INSIDE the If block (between If and Otherwise)
+- Set:
+  - Title: `Blood Pressure Reminder`
+  - Body: `Don't forget to record your blood pressure reading today! 🩺`
+  - Choose your preferred sound
+
+**Action 5: End If**
+- This should automatically appear - don't add it manually
+
+### Step 3: Get Your API URL
+
+1. Go back to the Blood Pressure Tracker web app
+2. Click "📱 Set Up Apple Shortcut Notifications"
+3. Click "Copy Your API URL"
+4. Go back to Shortcuts app
+5. Tap on the URL field in the "Get Contents of URL" action
+6. Paste your API URL
+
+### Step 4: Test the Shortcut
+
+1. Tap the ▶️ play button in Shortcuts
+2. You should get a notification if you haven't recorded a reading today
+3. If you have recorded one, nothing will happen (which is correct!)
+
+### Step 5: Set Up Automations
+
+Now make it run automatically:
+
+1. In Shortcuts app, go to the **Automation** tab (bottom)
+2. Tap **+** to create a new automation
+3. Choose **Time of Day**
+4. Set time to **12:00 PM**, Repeat: **Daily**
+5. Toggle ON "Run Immediately"
+6. Tap **Next**
+7. Search for "Run Shortcut" and add it
+8. Select your "Check BP Reading" shortcut
+9. Tap **Done**
+10. **IMPORTANT**: Toggle OFF "Ask Before Running"
+
+Repeat steps 2-10 for these additional times:
+- 2:00 PM (14:00)
+- 4:00 PM (16:00)
+- 6:00 PM (18:00)
+- 8:00 PM (20:00)
+
+### Troubleshooting
+
+**"Invalid URL" error:**
+- Make sure you pasted the FULL API URL including `https://`
+- Check there are no extra spaces
+
+**No notification appears:**
+- Make sure you haven't recorded a reading yet today
+- Check notification permissions for Shortcuts app
+- Try running the shortcut manually first
+
+**Automation not running:**
+- Make sure "Ask Before Running" is OFF
+- Check that "Run Immediately" is ON
+- Restart your iPhone if needed
+
+---
+
+## Need Help?
+
+If you have issues, check the in-app instructions or refer to APPLE_SHORTCUT.md in the GitHub repository.
+
+Your API URL format should look like:
+`https://your-app.vercel.app/api/check-reading?userId=your-user-id`
+
+Each person needs their own shortcut with their own unique API URL!

@@ -73,39 +73,51 @@ export const Dashboard = () => {
             <h3>📱 Set Up Apple Shortcut Notifications</h3>
             <p>Get automatic reminders at noon and every 2 hours if you haven't recorded a reading.</p>
             
+            <div className="download-shortcut-section">
+              <h4>Quick Setup</h4>
+              <p>Download the step-by-step instructions, then copy your API URL:</p>
+              <div className="download-buttons">
+                <a 
+                  href="/BP-Tracker-Shortcut.txt" 
+                  download="BP-Tracker-Instructions.txt"
+                  className="btn-download"
+                >
+                  📥 Download Instructions
+                </a>
+                <button onClick={copyShortcutURL} className="btn-copy-url">
+                  📋 Copy Your API URL
+                </button>
+              </div>
+              <p className="help-note">Your API URL: <code>{window.location.origin}/api/check-reading?userId={user?.id}</code></p>
+            </div>
+
             <div className="instruction-steps">
               <div className="step">
                 <div className="step-number">1</div>
                 <div className="step-content">
-                  <h4>Copy Your API URL</h4>
-                  <div className="api-url-box">
-                    <code>{window.location.origin}/api/check-reading?userId={user?.id}</code>
-                    <button onClick={copyShortcutURL} className="btn-copy-small">Copy</button>
-                  </div>
+                  <h4>Download Instructions</h4>
+                  <p>Click "Download Instructions" above to get the detailed setup guide. Open it and follow along!</p>
                 </div>
               </div>
 
               <div className="step">
                 <div className="step-number">2</div>
                 <div className="step-content">
-                  <h4>Create the Shortcut</h4>
-                  <ol>
-                    <li>Open the <strong>Shortcuts</strong> app on your iPhone</li>
-                    <li>Tap <strong>+</strong> to create a new shortcut</li>
-                    <li>Name it "Check BP Reading"</li>
-                    <li>Add these actions:</li>
-                  </ol>
-                  <ul className="action-list">
-                    <li><strong>Get Contents of URL</strong> - Paste your API URL above</li>
-                    <li><strong>Get Dictionary Value</strong> - Key: <code>hasReadingToday</code></li>
-                    <li><strong>If</strong> - Condition: Dictionary Value is false</li>
-                    <li><strong>Show Notification</strong> - "Don't forget your BP reading! 🩺"</li>
-                  </ul>
+                  <h4>Copy Your API URL</h4>
+                  <p>Click "Copy Your API URL" above. You'll paste this into the Shortcuts app.</p>
                 </div>
               </div>
 
               <div className="step">
                 <div className="step-number">3</div>
+                <div className="step-content">
+                  <h4>Follow Downloaded Instructions</h4>
+                  <p>The downloaded file has detailed step-by-step instructions for creating the shortcut. It shows you exactly which actions to add and in what order.</p>
+                </div>
+              </div>
+
+              <div className="step">
+                <div className="step-number">4</div>
                 <div className="step-content">
                   <h4>Set Up Automations</h4>
                   <ol>
@@ -126,7 +138,7 @@ export const Dashboard = () => {
               </div>
 
               <div className="step">
-                <div className="step-number">4</div>
+                <div className="step-number">5</div>
                 <div className="step-content">
                   <h4>Test It!</h4>
                   <p>Tap your shortcut manually to test. You should get a notification if you haven't recorded a reading today.</p>
@@ -135,6 +147,7 @@ export const Dashboard = () => {
             </div>
 
             <div className="instructions-footer">
+              <p className="footer-note">💡 <strong>Tip:</strong> The downloaded file has complete details for each step!</p>
               <button onClick={() => setShowShortcutInstructions(false)} className="btn-secondary">
                 Close Instructions
               </button>

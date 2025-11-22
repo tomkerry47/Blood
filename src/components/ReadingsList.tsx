@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import { supabase, type ReadingWithUser } from '../lib/supabase';
+import { supabase, type ReadingWithUser, type Reading } from '../lib/supabase';
 import { format } from 'date-fns';
+import { useAuth } from '../contexts/AuthContext';
 import './ReadingsList.css';
 
 export const ReadingsList = ({ refreshTrigger }: { refreshTrigger: number }) => {
+  const { user } = useAuth();
   const [readings, setReadings] = useState<ReadingWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | string>('all');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Partial<Reading>>({});
 
   useEffect(() => {
     loadReadings();
@@ -60,6 +64,53 @@ export const ReadingsList = ({ refreshTrigger }: { refreshTrigger: number }) => 
     return { label: 'Hypertensive Crisis', color: '#c53030' };
   };
 
+  const startEdit = (reading: ReadingWithUser) => {
+    setEditingId(reading.id);
+    setEditForm({
+      systolic: reading.systolic,
+      diastolic: reading.diastolic,
+      pulse: reading.pulse,
+      notes: reading.notes,
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm({});
+  };
+
+  const saveEdit = async (readingId: string) => {
+    const { error } = await supabase
+      .from('readings')
+      .update(editForm)
+      .eq('id', readingId);
+
+    if (error) {
+      console.error('Error updating reading:', error);
+      alert('Failed to update reading');
+    } else {
+      setEditingId(null);
+      setEditForm({});
+      loadReadings();
+    }
+  };
+
+  const deleteReading = async (readingId: string) => {
+    if (!confirm('Are you sure you want to delete this reading?')) return;
+
+    const { error } = await supabase
+      .from('readings')
+      .delete()
+      .eq('id', readingId);
+
+    if (error) {
+      console.error('Error deleting reading:', error);
+      alert('Failed to delete reading');
+    } else {
+      loadReadings();
+    }
+  };
+
   if (loading) {
     return (
       <div className="readings-card">
@@ -103,6 +154,8 @@ export const ReadingsList = ({ refreshTrigger }: { refreshTrigger: number }) => 
         <div className="readings-list">
           {filteredReadings.map((reading) => {
             const category = getBPCategory(reading.systolic, reading.diastolic);
+            const isEditing = editingId === reading.id;
+            const canEdit = user?.id === reading.user_id;
             
             return (
               <div key={reading.id} className="reading-item">
@@ -113,28 +166,86 @@ export const ReadingsList = ({ refreshTrigger }: { refreshTrigger: number }) => 
                   </span>
                 </div>
                 
-                <div className="reading-values">
-                  <div className="bp-value">
-                    <span className="value">{reading.systolic}/{reading.diastolic}</span>
-                    <span className="label">mmHg</span>
-                  </div>
-                  
-                  {reading.pulse && (
-                    <div className="pulse-value">
-                      <span className="value">{reading.pulse}</span>
-                      <span className="label">bpm</span>
+                {isEditing ? (
+                  <div className="edit-form">
+                    <div className="edit-inputs">
+                      <div className="edit-field">
+                        <label>Systolic</label>
+                        <input
+                          type="number"
+                          value={editForm.systolic || ''}
+                          onChange={(e) => setEditForm({ ...editForm, systolic: parseInt(e.target.value) })}
+                          min="50"
+                          max="250"
+                        />
+                      </div>
+                      <div className="edit-field">
+                        <label>Diastolic</label>
+                        <input
+                          type="number"
+                          value={editForm.diastolic || ''}
+                          onChange={(e) => setEditForm({ ...editForm, diastolic: parseInt(e.target.value) })}
+                          min="30"
+                          max="150"
+                        />
+                      </div>
+                      <div className="edit-field">
+                        <label>Pulse</label>
+                        <input
+                          type="number"
+                          value={editForm.pulse || ''}
+                          onChange={(e) => setEditForm({ ...editForm, pulse: e.target.value ? parseInt(e.target.value) : null })}
+                          min="30"
+                          max="200"
+                        />
+                      </div>
                     </div>
-                  )}
-                  
-                  <div className="bp-category" style={{ backgroundColor: category.color }}>
-                    {category.label}
+                    <div className="edit-field full-width">
+                      <label>Notes</label>
+                      <textarea
+                        value={editForm.notes || ''}
+                        onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                        rows={2}
+                      />
+                    </div>
+                    <div className="edit-actions">
+                      <button onClick={() => saveEdit(reading.id)} className="btn-save">Save</button>
+                      <button onClick={cancelEdit} className="btn-cancel">Cancel</button>
+                    </div>
                   </div>
-                </div>
-                
-                {reading.notes && (
-                  <div className="reading-notes">
-                    <strong>Notes:</strong> {reading.notes}
-                  </div>
+                ) : (
+                  <>
+                    <div className="reading-values">
+                      <div className="bp-value">
+                        <span className="value">{reading.systolic}/{reading.diastolic}</span>
+                        <span className="label">mmHg</span>
+                      </div>
+                      
+                      {reading.pulse && (
+                        <div className="pulse-value">
+                          <span className="value">{reading.pulse}</span>
+                          <span className="label">bpm</span>
+                        </div>
+                      )}
+                      
+                      <div className="bp-category" style={{ backgroundColor: category.color }}>
+                        {category.label}
+                      </div>
+                    </div>
+                    
+                    {reading.notes && (
+                      <div className="reading-notes">
+                        <strong>Notes:</strong> {reading.notes}
+                      </div>
+                    )}
+
+                    {canEdit && (
+                      <div className="reading-actions">
+                        <button onClick={() => startEdit(reading)} className="btn-edit">✏️ Edit</button>
+                        <button onClick={() => deleteReading(reading.id)} className="btn-delete">🗑️ Delete</button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             );
