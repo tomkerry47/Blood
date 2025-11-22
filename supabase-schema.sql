@@ -31,10 +31,11 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE readings ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for users table
--- Users can read their own data
-CREATE POLICY "Users can view own data"
+-- Users can view all users (since it's a shared app for 2 people)
+CREATE POLICY "Users can view all users"
   ON users FOR SELECT
-  USING (auth.uid() = id);
+  TO authenticated
+  USING (true);
 
 -- Users can insert their own data (for auto-creation on first login)
 CREATE POLICY "Users can insert own data"
