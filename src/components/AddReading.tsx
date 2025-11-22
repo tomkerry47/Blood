@@ -58,6 +58,7 @@ export const AddReading = ({ onReadingAdded }: { onReadingAdded: () => void }) =
             <input
               id="systolic"
               type="number"
+              inputMode="numeric"
               value={systolic}
               onChange={(e) => setSystolic(e.target.value)}
               required
@@ -73,6 +74,7 @@ export const AddReading = ({ onReadingAdded }: { onReadingAdded: () => void }) =
             <input
               id="diastolic"
               type="number"
+              inputMode="numeric"
               value={diastolic}
               onChange={(e) => setDiastolic(e.target.value)}
               required
@@ -88,6 +90,7 @@ export const AddReading = ({ onReadingAdded }: { onReadingAdded: () => void }) =
             <input
               id="pulse"
               type="number"
+              inputMode="numeric"
               value={pulse}
               onChange={(e) => setPulse(e.target.value)}
               min="30"
