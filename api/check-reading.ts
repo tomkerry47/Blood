@@ -28,32 +28,53 @@ export default async function handler(req: any, res: any) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
-    // Check if there's ANY reading for today (from any user)
-    // Use UTC to match database storage
-    const now = new Date();
-    const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
-
-    const { data, error } = await supabase
+    // Get the most recent reading to check if it's from today
+    const { data: allData, error: allError } = await supabase
       .from('readings')
       .select('id, recorded_at, user_id, users(name)')
-      .gte('recorded_at', today.toISOString())
       .order('recorded_at', { ascending: false })
-      .limit(1);
+      .limit(5);  // Get last 5 readings for debugging
 
-    if (error) {
-      res.status(500).json({ error: error.message });
+    if (allError) {
+      res.status(500).json({ error: allError.message });
       return;
     }
 
-    const hasReadingToday = data && data.length > 0;
+    // Check if the most recent reading is from today (any timezone)
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    
+    let hasReadingToday = false;
+    let lastReading = null;
+
+    if (allData && allData.length > 0) {
+      const mostRecent = allData[0];
+      const readingDate = new Date(mostRecent.recorded_at);
+      const readingDayStart = new Date(readingDate.getFullYear(), readingDate.getMonth(), readingDate.getDate(), 0, 0, 0, 0);
+      
+      // Check if same calendar day
+      hasReadingToday = todayStart.getTime() === readingDayStart.getTime();
+      
+      if (hasReadingToday) {
+        lastReading = {
+          recorded_at: mostRecent.recorded_at,
+          user_name: (mostRecent as any).users?.name || 'Unknown'
+        };
+      }
+    }
 
     res.status(200).json({
       hasReadingToday,
-      lastReading: hasReadingToday ? {
-        recorded_at: data[0].recorded_at,
-        user_name: (data[0] as any).users?.name || 'Unknown'
-      } : null,
+      lastReading,
       checked_at: new Date().toISOString(),
+      debug: {
+        serverTime: now.toISOString(),
+        todayStart: todayStart.toISOString(),
+        recentReadings: allData?.map(r => ({
+          recorded_at: r.recorded_at,
+          isSameDay: hasReadingToday
+        })) || []
+      }
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
