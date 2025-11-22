@@ -37,8 +37,8 @@ export const ReadingsList = ({ refreshTrigger }: { refreshTrigger: number }) => 
       // Transform the data to match our ReadingWithUser type
       const transformedData = data?.map((reading: any) => ({
         ...reading,
-        user_name: reading.users.name,
-        user_email: reading.users.email,
+        user_name: reading.users?.name || 'Unknown User',
+        user_email: reading.users?.email || '',
       })) || [];
       
       setReadings(transformedData);
